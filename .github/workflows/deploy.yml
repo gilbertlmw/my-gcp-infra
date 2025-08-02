@@ -11,7 +11,8 @@ jobs:
     environment: dev
 
     permissions:
-      contents: read  # Removed id-token: write since you're using access_token
+      id-token: write
+      contents: read
 
     steps:
       - name: Checkout code
@@ -20,7 +21,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          token_format: 'access_token'  # Ensure access_token is used
+          token_format: 'access_token'
           workload_identity_provider: projects/915398988184/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-pool
           service_account: gha-deployer@stocks-415200.iam.gserviceaccount.com
           access_token_scopes: 'https://www.googleapis.com/auth/cloud-platform'

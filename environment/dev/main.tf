@@ -13,4 +13,9 @@ resource "google_storage_bucket" "default" {
       type = "Delete"
     }
   }
+
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes  = [location]
+  }
 }

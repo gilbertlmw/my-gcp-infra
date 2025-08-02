@@ -1,14 +1,11 @@
-name: Terraform Deploy to GCP
-
-on:
-  push:
-    branches: [main]
-
 jobs:
   terraform:
     name: Terraform Plan and Apply
     runs-on: ubuntu-latest
     environment: dev
+
+    env:
+      ACTIONS_STEP_DEBUG: true  # Enables verbose debug output
 
     permissions:
       id-token: write
@@ -21,10 +18,11 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: "projects/915398988184/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-pool"
+          token_format: 'access_token'
+          workload_identity_provider: projects/915398988184/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-pool
           service_account: gha-deployer@stocks-415200.iam.gserviceaccount.com
-          access_token_scopes: "https://www.googleapis.com/auth/cloud-platform"
-          export_environment_variables: true
+          access_token_scopes: https://www.googleapis.com/auth/cloud-platform
+          audience: sts.googleapis.com  # <- Add this line to force the correct audience
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3

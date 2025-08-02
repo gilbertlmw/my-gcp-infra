@@ -24,6 +24,11 @@ jobs:
       - name: Dump environment variables
         run: env | sort
 
+      - name: Print debug info
+        run: |
+          echo "WIP=${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}"
+          echo "SA=${{ secrets.SERVICE_ACCOUNT_EMAIL }}"
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:

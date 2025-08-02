@@ -26,11 +26,6 @@ jobs:
           service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
           access_token_scopes: 'https://www.googleapis.com/auth/cloud-platform'
 
-          # override conflicting defaults
-          create_credentials_file: false
-          export_environment_variables: false
-          cleanup_credentials: false
-
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
 

@@ -25,8 +25,8 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           token_format: 'access_token'
-          workload_identity_provider: projects/915398988184/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-pool
-          service_account: gha-deployer@stocks-415200.iam.gserviceaccount.com
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
           access_token_scopes: https://www.googleapis.com/auth/cloud-platform
           audience: sts.googleapis.com  # <- Add this line to force the correct audience
 

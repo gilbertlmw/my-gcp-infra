@@ -1,29 +1,35 @@
 variable "project_id" {
-  type = string
+  description = "The GCP Project ID"
+  type        = string
 }
 
 variable "project_number" {
-  type = string
+  description = "The GCP Project Number"
+  type        = string
 }
 
-variable "service_account_id" {
-  type = string
+variable "gha_service_account_id" {
+  description = "The ID for the deployment Service Account"
+  type        = string
+  default     = "gha-deployer"
 }
 
 variable "github_repo" {
-  type = string
-  description = "Format: owner/repo"
+  description = "GitHub repository in org/repo format"
+  type        = string
 }
 
 variable "workload_identity_pool_id" {
-  type = string
-  description = "Existing WIF pool ID (not created by Terraform)"
+  description = "Workload Identity Pool ID"
+  type        = string
 }
 
-variable "target_bucket_name" {
-  type = string
+variable "target_bucket_names" {
+  description = "List of GCS bucket names to grant storage object access"
+  type        = list(string)
 }
 
-variable "target_dataset_id" {
-  type = string
+variable "target_dataset_ids" {
+  description = "List of BigQuery dataset IDs to grant data editor permissions"
+  type        = list(string)
 }

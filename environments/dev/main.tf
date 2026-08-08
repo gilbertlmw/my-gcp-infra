@@ -20,7 +20,7 @@ module "bigquery" {
 
 # 3. Instantiate GHA Identity Module
 module "gha_identity" {
-  source = "../modules/gha_identity"
+  source = "../../modules/gha_identity"
 
   project_id               = var.project_id
   project_number           = var.project_number

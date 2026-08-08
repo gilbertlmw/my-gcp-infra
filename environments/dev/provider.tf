@@ -10,7 +10,6 @@ terraform {
   backend "gcs" {
     bucket = "my-gha-infra-state-2025"
     prefix = "environments/dev"
-    credentials = var.gcp_credentials_file
   }
 }
 

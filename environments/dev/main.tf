@@ -20,13 +20,14 @@ module "bigquery" {
 
 # 3. Instantiate GHA Identity Module
 module "gha_identity" {
-  source = "../../modules/gha_identity"
+  source = "../modules/gha_identity"
 
-  project_id         = var.project_id
-  service_account_id = "gha-job-runner-dev"
-  github_repo        = var.github_repo
+  project_id               = var.project_id
+  project_number           = var.project_number
+  service_account_id       = "gha-deployer"
+  github_repo              = "gilbertlmw/my-gcp-infra"
+  workload_identity_pool_id = "github-actions-pool"
 
-  # Wire outputs from GCS & BigQuery modules
-  target_bucket_name = module.gcs.bucket_name
-  target_dataset_id  = module.bigquery.dataset_id
+  target_bucket_name = "my-tf-state-bucket"
+  target_dataset_id  = "equity_research"
 }

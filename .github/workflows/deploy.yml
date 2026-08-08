@@ -2,35 +2,23 @@ name: Terraform Deploy to GCP
 
 on:
   push:
-    branches: [main, dev, test]
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: "Target environment to deploy"
-        required: true
-        default: "dev"
-        type: choice
-        options:
-          - dev
-          - test
-          - prod
+    branches: [main]
+  workflow_dispatch: # Allows manual trigger from GitHub UI
 
 jobs:
   terraform:
-    name: Terraform Plan and Apply (${{ github.event.inputs.environment || (github.ref_name == 'main' && 'prod' || github.ref_name) }})
+    name: Terraform Plan and Apply (Dev)
     runs-on: ubuntu-latest
 
-    # Determine environment name from manual input or branch name
-    env:
-      ENV_NAME: ${{ github.event.inputs.environment || (github.ref_name == 'main' && 'prod' || github.ref_name) }}
-      ACTIONS_STEP_DEBUG: true
-
-    # Pull environment-specific secrets dynamically from GitHub Environments
-    environment: ${{ github.event.inputs.environment || (github.ref_name == 'main' && 'prod' || github.ref_name) }}
+    # Uses 'dev' environment secrets from GitHub Settings -> Environments -> dev
+    environment: dev
 
     defaults:
       run:
-        working-directory: environments/${{ github.event.inputs.environment || (github.ref_name == 'main' && 'prod' || github.ref_name) }}
+        working-directory: environments/dev
+
+    env:
+      ACTIONS_STEP_DEBUG: true
 
     permissions:
       id-token: write
@@ -45,7 +33,6 @@ jobs:
 
       - name: Print debug info
         run: |
-          echo "Deploying to environment: ${{ env.ENV_NAME }}"
           echo "WIP=${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}"
           echo "SA=${{ secrets.SERVICE_ACCOUNT_EMAIL }}"
 

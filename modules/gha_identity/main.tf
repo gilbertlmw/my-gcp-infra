@@ -36,12 +36,6 @@ resource "google_bigquery_dataset_iam_member" "dataset_editor" {
   member     = "serviceAccount:${google_service_account.gha_sa.email}"
 }
 
-resource "google_storage_bucket_iam_member" "bucket_admin" {
-  bucket = var.target_bucket_name
-  role   = "roles/storage.objectAdmin"
-  member = "serviceAccount:${google_service_account.gha_sa.email}"
-}
-
 resource "google_project_iam_member" "gha_wif_bigquery_admin" {
   project = var.project_id
   role    = "roles/bigquery.admin"

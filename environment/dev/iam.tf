@@ -9,3 +9,9 @@ resource "google_project_iam_member" "gha_storage_admin" {
   role    = "roles/storage.admin"
   member  = "serviceAccount:${google_service_account.gha.email}"
 }
+
+resource "google_project_iam_member" "gha_bigquery_admin" {
+  project = var.project_id
+  role    = "roles/bigquery.admin"
+  member  = "serviceAccount:${google_service_account.gha.email}"
+}

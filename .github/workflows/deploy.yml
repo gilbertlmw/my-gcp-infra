@@ -3,23 +3,17 @@ name: Terraform Deploy to GCP
 on:
   push:
     branches: [main]
-  workflow_dispatch: # Allows manual trigger from GitHub UI
+  workflow_dispatch:
 
 jobs:
   terraform:
     name: Terraform Plan and Apply (Dev)
     runs-on: ubuntu-latest
-
-    # Uses 'dev' environment secrets from GitHub Settings -> Environments -> dev
     environment: dev
 
     defaults:
       run:
         working-directory: environments/dev
-
-    env:
-      ACTIONS_STEP_DEBUG: true
-      TF_VAR_gcp_credentials_file: ${{ env.GOOGLE_GHA_CREDS_PATH }}
 
     permissions:
       id-token: write
@@ -37,6 +31,9 @@ jobs:
           echo "WIP=${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}"
           echo "SA=${{ secrets.SERVICE_ACCOUNT_EMAIL }}"
 
+      ###########################################################################
+      # 1. Authenticate to Google Cloud using Workload Identity Federation
+      ###########################################################################
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -46,14 +43,32 @@ jobs:
           access_token_scopes: https://www.googleapis.com/auth/cloud-platform
           audience: sts.googleapis.com
 
+      ###########################################################################
+      # 2. Export the WIF credential file so Terraform backend can use it
+      ###########################################################################
+      - name: Export Terraform backend credentials
+        run: echo "TF_VAR_gcp_credentials_file=${GOOGLE_GHA_CREDS_PATH}" >> $GITHUB_ENV
+
+      ###########################################################################
+      # 3. Install Terraform
+      ###########################################################################
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
 
+      ###########################################################################
+      # 4. Terraform Init (now uses correct backend credentials)
+      ###########################################################################
       - name: Terraform Init
         run: terraform init
 
+      ###########################################################################
+      # 5. Terraform Plan
+      ###########################################################################
       - name: Terraform Plan
         run: terraform plan -out=tfplan
 
+      ###########################################################################
+      # 6. Terraform Apply
+      ###########################################################################
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan

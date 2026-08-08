@@ -19,7 +19,3 @@ variable "github_repo" {
   type        = string
   default     = "gilbertlmw/my-gcp-infra"
 }
-
-variable "gcp_credentials_file" {
-  type = string
-}

@@ -8,6 +8,15 @@ module "gcs" {
   force_destroy = true # Dev safeguard setting
 }
 
+module "gcs" {
+  source = "../../modules/gcs"
+
+  project_id    = var.project_id
+  bucket_name   = "my-gcp-job-data-dev-1"
+  location      = var.region
+  force_destroy = true # Dev safeguard setting
+}
+
 # 2. Instantiate BigQuery Module
 module "bigquery" {
   source = "../../modules/bigquery"

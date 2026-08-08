@@ -1,5 +1,5 @@
 # 1. Instantiate Storage Module
-module "gcs" {
+module "my-gcp-job-data-dev" {
   source = "../../modules/gcs"
 
   project_id    = var.project_id
@@ -8,7 +8,7 @@ module "gcs" {
   force_destroy = true # Dev safeguard setting
 }
 
-module "gcs" {
+module "my-gcp-job-data-dev-1" {
   source = "../../modules/gcs"
 
   project_id    = var.project_id

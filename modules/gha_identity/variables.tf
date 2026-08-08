@@ -24,6 +24,12 @@ variable "workload_identity_pool_id" {
   type        = string
 }
 
+variable "tf_state_bucket_name" {
+  description = "Name of the GCS bucket storing Terraform state files"
+  type        = string
+  default     = "my-gha-infra-state-2025"
+}
+
 variable "target_bucket_names" {
   description = "List of GCS bucket names to grant storage object access"
   type        = list(string)

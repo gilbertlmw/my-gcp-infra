@@ -31,3 +31,10 @@ resource "google_storage_bucket_iam_member" "bucket_admin" {
   role   = "roles/storage.objectAdmin"
   member = "serviceAccount:${google_service_account.gha_sa.email}"
 }
+
+# 5. Restricted Storage Access (it is for the state file)
+resource "google_storage_bucket_iam_member" "state_bucket_admin" {
+  bucket = var.tf_state_bucket_name
+  role   = "roles/storage.objectAdmin"
+  member = "serviceAccount:${google_service_account.gha_sa.email}"
+}

@@ -2,16 +2,35 @@ name: Terraform Deploy to GCP
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev, test]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment to deploy"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - test
+          - prod
 
 jobs:
   terraform:
-    name: Terraform Plan and Apply
+    name: Terraform Plan and Apply (${{ github.event.inputs.environment || (github.ref_name == 'main' && 'prod' || github.ref_name) }})
     runs-on: ubuntu-latest
-    environment: dev
 
+    # Determine environment name from manual input or branch name
     env:
-      ACTIONS_STEP_DEBUG: true  # Enables verbose debug output
+      ENV_NAME: ${{ github.event.inputs.environment || (github.ref_name == 'main' && 'prod' || github.ref_name) }}
+      ACTIONS_STEP_DEBUG: true
+
+    # Pull environment-specific secrets dynamically from GitHub Environments
+    environment: ${{ github.event.inputs.environment || (github.ref_name == 'main' && 'prod' || github.ref_name) }}
+
+    defaults:
+      run:
+        working-directory: environments/${{ github.event.inputs.environment || (github.ref_name == 'main' && 'prod' || github.ref_name) }}
 
     permissions:
       id-token: write
@@ -26,6 +45,7 @@ jobs:
 
       - name: Print debug info
         run: |
+          echo "Deploying to environment: ${{ env.ENV_NAME }}"
           echo "WIP=${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}"
           echo "SA=${{ secrets.SERVICE_ACCOUNT_EMAIL }}"
 
@@ -36,19 +56,16 @@ jobs:
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
           access_token_scopes: https://www.googleapis.com/auth/cloud-platform
-          audience: sts.googleapis.com  # <- Add this line to force the correct audience
+          audience: sts.googleapis.com
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
         run: terraform init
-        working-directory: environment/dev
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: environment/dev
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
-        working-directory: environment/dev

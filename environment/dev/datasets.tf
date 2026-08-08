@@ -1,7 +1,7 @@
 resource "google_bigquery_dataset" "equity_research" {
   dataset_id                  = "equity_research"
-  project                     = project_id
-  location                    = "AUSTRALIA-SOUTHEAST1"
+  project                     = var.project_id
+  location                    = var.region
 
   labels = {
     environment = "dev"

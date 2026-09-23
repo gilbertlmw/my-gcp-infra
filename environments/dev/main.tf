@@ -18,6 +18,16 @@ module "gcs_secondary" {
   force_destroy = true
 }
 
+# 1c. Test Data Bucket
+module "gcs_secondary" {
+  source = "../../modules/gcs"
+
+  project_id    = var.project_id
+  bucket_name   = "my-gcp-job-data-testing-dev"
+  location      = var.region
+  force_destroy = true
+}
+
 # Preserve state if gcs was renamed to gcs_raw
 moved {
   from = module.gcs

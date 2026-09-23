@@ -19,7 +19,7 @@ module "gcs_secondary" {
 }
 
 # 1c. Test Data Bucket
-module "gcs_secondary" {
+module "gcs_secondary_testing" {
   source = "../../modules/gcs"
 
   project_id    = var.project_id
